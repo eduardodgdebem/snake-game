@@ -6,21 +6,30 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
       rel="stylesheet"
     />
+
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.1.0/rxjs.umd.js" ></script>
     <title>Joguinho Manhoso</title>
   </head>
   <body>
-    <button
-      class="custom-btn btn-3"
-      type="button"
-      id="btnJogar"
-      onclick="start()"
-    >
-      Jogar
-    </button>
-    <div id="placar"></div>
-    <canvas id="stage" width="400" height="400"></canvas>
-    <script src="./scripts.js"></script>
+    <head>
+      <nav></nav>
+    </head>
+    <main>
+      <div style="display: flex; width: 600px; margin: 5px auto;">
+        <div id="scoreboard"></div>
+        <button
+          class="custom-btn btn-3"
+          type="button"
+          id="btnJogar"
+          onclick="start()"
+        >
+          Jogar
+        </button>
+      </div>
+
+      <canvas id="stage" width="400" height="400"></canvas>
+    </main>
   </body>
+
+  <script src="./scripts.js"></script>
 </html>

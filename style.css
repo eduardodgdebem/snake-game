@@ -1,20 +1,7 @@
-/*#btnJogar {
-  width: 10rem;
-  max-width: 10rem;
-  padding: .8rem 1.5rem;
-  margin: 2rem auto;
-  border-radius: 5px;
-  border: none;
-  font-size: 1rem;
-  display: block;
-}*/
-canvas{
-  border-radius: 5px;
+body {
+  background-color: #60a4ff;
+  font-family: "Open Sans";
 }
-  body{
-    background-color:#60a4ff;
-    font-family: 'Open Sans';
-  }
 
 button {
   margin: 20px;
@@ -25,16 +12,15 @@ button {
   color: #696969;
   border-radius: 5px;
   padding: 10px 25px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 500;
   background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   display: inline-block;
-   box-shadow:inset 
-   7px 7px 20px 0px rgba(0,0,0,.1),
-   4px 4px 5px 0px rgba(0,0,0,.1);
+  box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
   outline: none;
 }
 
@@ -62,7 +48,7 @@ button {
   content: "";
   right: 0;
   top: 0;
-   background: rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
   transition: all 0.3s ease;
 }
 .btn-3:before {
@@ -73,7 +59,7 @@ button {
   width: 0%;
   height: 2px;
 }
-.btn-3:hover{
+.btn-3:hover {
   background: transparent;
   box-shadow: none;
 }
@@ -83,8 +69,8 @@ button {
 .btn-3:hover:after {
   width: 100%;
 }
-.btn-3 span:hover{
-   color: rgb(255, 255, 255);
+.btn-3 span:hover {
+  color: rgb(255, 255, 255);
 }
 .btn-3 span:before,
 .btn-3 span:after {
@@ -110,8 +96,8 @@ button {
   width: 100%;
 }
 
-
-#placar{
+#scoreboard {
+  visibility: hidden;
   color: aliceblue;
   display: block;
   font-size: 22px;
@@ -119,4 +105,23 @@ button {
   margin: auto;
   margin-bottom: 0px;
   padding-bottom: 0%;
+}
+
+canvas {
+  border-radius: 5px;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+  box-shadow: inset 2px 2px 2px 0px rgba(73, 73, 73, 0.5);
+}
+
+#stage {
+  visibility: hidden;
+  width: 400px;
+  height: 400px;
+  border: 8px solid white;
+  border-radius: 5px;
+  margin: 10px auto;
+  display: block;
+  box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
 }

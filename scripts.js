@@ -1,104 +1,32 @@
-let isPlaying = new BehaviorSubject(false);
-
 let ctx;
-let numOfReplays = 0;
-
-function start() {
-  isPlaying = true;
-  numOfReplays++;
-  console.log(numOfReplays);
-
-    setCanvas();  
-
-  if(ctx) setInterval(game, 80);
-}
-
-const setCanvas = () => {
-  document.getElementsByClassName("custom-btn btn-3").disabled = true;
-
-  const style = document.createElement("style");
-  style.innerHTML = `
-        canvas {
-            outline: none;
-            -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
-            box-shadow:inset 2px 2px 2px 0px rgba(73, 73, 73, 0.5)
-        }
-        #stage { 
-            width: 400px;
-            height: 400px;
-            border: 8px solid white;
-            border-radius: 5px;
-            margin-top: 10px;
-            margin-bottom: auto;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-            box-shadow:inset 
-   7px 7px 20px 0px rgba(0,0,0,.1),
-   4px 4px 5px 0px rgba(0,0,0,.1);
-    `;
-  document.head.appendChild(style);
-
-  let stage = document.getElementById("stage");
-  ctx = stage.getContext("2d");
-
-  document.addEventListener("keydown", keyPush);
-};
-
-const removeCanvas = () => {
-  ctx = null;
-};
 
 const vel = 1;
-
-let vx = 0;
-let vy = 0;
-let px = 10;
-let py = 10;
-let tp = 20;
-let qp = 20;
-let = ax = ay = 15;
-
+let numOfPlays = 0;
+let vx = (vy = 0);
+let px = (py = 10);
+let tp = (qp = 20);
+let ax = (ay = 15);
 let trail = [];
 let tail = 5;
 
+let latestInput;
+
 clearPoint();
 
-function died() {
-  removeCanvas();
-  stopGame();
-  document.removeEventListener("keydown", keyPush);
-  alert("Fim de jogo! sua pontuacao foi: " + (trail.length - 5) + " macas");
-}
+function start() {
+  setVisible();
+  reloadExeption();
+  setCanvas();
 
-const setDefaultValues = () => {
-  vx = 0;
-  vy = 0;
-  px = 10;
-  py = 10;
-  tp = 20;
-  qp = 20;
-  ax = 15;
-  ay = 15;
-  trail = [];
-  tail = 5;
-};
-
-function clearPoint() {
-  const divPlacar = document.getElementById("placar");
-  const html = "Pontos: 0";
-  divPlacar.innerHTML = html;
-}
-function updatePoints() {
-  const divPlacar = document.getElementById("placar");
-  const points = trail.length - 4;
-  const html = `Pontos: ${points}`;
-  divPlacar.innerHTML = html;
+  setInterval(game, 85);
 }
 
 function game() {
+  numOfPlays++;
+
   px += vx;
   py += vy;
+
   if (px < 0) {
     px = qp - 1;
   }
@@ -122,12 +50,16 @@ function game() {
 
   for (let i = 0; i < trail.length; i++) {
     ctx.fillRect(trail[i].x * tp, trail[i].y * tp, tp - 1, tp - 1);
+
     if (trail[i].x == px && trail[i].y == py) {
+      // if(vendors.some(({y}) => y !== py + 1 ) || vendors.some(({y}) => y !== py - 1 )) {
       if (trail.length > 5) {
+        vx = vy = 0;
+        tail = 5;
         died();
-        console.log("opas");
         break;
       }
+      // }
     }
   }
 
@@ -144,27 +76,106 @@ function game() {
   }
 }
 
-function stopGame() {
-  isPlaying = false;
+const setCanvas = () => {
+  document.getElementsByClassName("custom-btn btn-3").disabled = true;
+
+  const stage = document.getElementById("stage");
+
+  ctx = stage.getContext("2d");
+
+  document.addEventListener("keydown", keyPush);
+};
+
+const setVisible = () => {
+  const stage = document.getElementById("stage");
+  const scoreboard = document.getElementById("scoreboard");
+
+  stage.style.visibility = "visible";
+  scoreboard.style.visibility = "visible";
+};
+
+const reloadExeption = () => {
+  if (numOfPlays > 1) {
+    location.reload();
+  }
+};
+
+const died = () => {
+  document.getElementById("btnJogar").innerHTML = "Jogar Novamente";
+  document.removeEventListener("keydown", keyPush);
+  alert("Fim de jogo! sua pontuacao foi: " + (trail.length - 5) + " macas");
+};
+
+const setDefaultValues = () => {
+  vx = 0;
+  vy = 0;
+  px = 10;
+  py = 10;
+  tp = 20;
+  qp = 20;
+  ax = 15;
+  ay = 15;
+  trail = [];
+  tail = 5;
+};
+
+const updatePoints = () => {
+  const scoreboardDiv = document.getElementById("scoreboard");
+  const points = trail.length - 4;
+  const text = `Pontos: ${points}`;
+  scoreboardDiv.innerHTML = text;
+};
+
+function clearPoint() {
+  const scoreboardDiv = document.getElementById("scoreboard");
+  const text = "Pontos: 0";
+  scoreboardDiv.innerHTML = text;
 }
 
-function keyPush(event) {
-  switch (event.keyCode) {
-    case 37: // Left
+let previousDirection;
+
+const left = 37;
+const right = 39;
+const up = 38;
+const down = 40;
+
+const directionConfig = {
+  [left]: { cant: right },
+  [right]: { cant: left },
+  [up]: { cant: down },
+  [down]: { cant: up },
+};
+
+const keyPush = (event) => {
+  const currentKey = event.keyCode;
+  const exeptionDirection = directionConfig[currentKey].cant;
+
+  if (previousDirection !== exeptionDirection) {
+    previousDirection = currentKey;
+
+    directionSwitch(currentKey);
+  }
+};
+
+const directionSwitch = (key) => {
+  switch (key) {
+    case left:
       vx = -vel;
       vy = 0;
       break;
-    case 38: // up
+    case up:
       vx = 0;
       vy = -vel;
       break;
-    case 39: // right
+    case right:
       vx = vel;
       vy = 0;
+
       break;
-    case 40: // down
+    case down:
       vx = 0;
       vy = vel;
+
       break;
   }
-}
+};
