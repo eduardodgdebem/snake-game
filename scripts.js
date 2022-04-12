@@ -18,7 +18,7 @@ function start() {
   reloadExeption();
   setCanvas();
 
-  setInterval(game, 85);
+  setInterval(game, 90);
 }
 
 function game() {
@@ -48,33 +48,41 @@ function game() {
 
   ctx.fillStyle = "#3a7830";
 
-  for (let i = 0; i < trail.length; i++) {
-    ctx.fillRect(trail[i].x * tp, trail[i].y * tp, tp - 1, tp - 1);
-
-    if (trail[i].x == px && trail[i].y == py) {
-      // if(vendors.some(({y}) => y !== py + 1 ) || vendors.some(({y}) => y !== py - 1 )) {
+  trail.forEach(({ x, y }) => {
+    ctx.fillRect(x * tp, y * tp, tp - 1, tp - 1);
+    if (x == px && y == py) {
       if (trail.length > 5) {
         vx = vy = 0;
         tail = 5;
         died();
-        break;
       }
-      // }
     }
-  }
+  });
 
   trail = [...trail, { x: px, y: py }];
   while (trail.length > tail) {
     trail.shift();
   }
 
-  if (ax == px && ay == py) {
-    tail++;
-    ax = Math.floor(Math.random() * qp);
-    ay = Math.floor(Math.random() * qp);
-    updatePoints();
-  }
+  addPoint();
 }
+
+const addPoint = () => {
+  if (ax == px && ay == py) {
+    possibleX = Math.floor(Math.random() * qp);
+    possibleY = Math.floor(Math.random() * qp);
+
+    const isInside = trail.some(({ x, y }) => { return x == possibleX && y == possibleY });
+    if (!isInside) {
+      ax = possibleX;
+      ay = possibleY;
+      updatePoints();
+      return tail++;
+    } else {
+      return addPoint();
+    }
+  }
+};
 
 const setCanvas = () => {
   document.getElementsByClassName("custom-btn btn-3").disabled = true;
@@ -152,7 +160,6 @@ const keyPush = (event) => {
 
   if (previousDirection !== exeptionDirection) {
     previousDirection = currentKey;
-
     directionSwitch(currentKey);
   }
 };
@@ -170,12 +177,10 @@ const directionSwitch = (key) => {
     case right:
       vx = vel;
       vy = 0;
-
       break;
     case down:
       vx = 0;
       vy = vel;
-
       break;
   }
 };
